@@ -1,0 +1,26 @@
+# 忽略根目录下的 .workbuddy 文件夹（及其内容）
+/.workbuddy/
+
+# 忽略根目录下的 pdf_read 文件夹（及其内容）
+/pdf_read/
+
+# 忽略嵌套目录下的 .workbuddy（falling/falling/.workbuddy）
+**/.workbuddy/
+
+# 忽略 Qtfall 下的 build 目录
+Qtfall/build/
+
+# 忽略 STM32 子项目下的 build 目录
+falling/build/
+
+# 常见构建目录
+build/
+dist/
+out/
+cmake-build-*/
+
+# VS Code / Qt Creator 配置（按需）
+.vscode/
+.settings/
+.qtcreator/
+*.user

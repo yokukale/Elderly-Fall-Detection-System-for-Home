@@ -1,0 +1,303 @@
+<!-- pages/settings/settings.wxml -->
+<view class="page-wrap">
+  <!-- 家人与看护档案 -->
+  <view class="card">
+    <view class="section-header">
+      <text class="section-title">看护对象与紧急联系</text>
+      <text class="section-sub">用于首页展示与一键呼救</text>
+    </view>
+
+    <view class="field-item">
+      <text class="field-label">长辈称呼</text>
+      <input
+        class="field-input"
+        placeholder="例如：爷爷 / 奶奶 / 母亲"
+        maxlength="16"
+        value="{{prefs.elderName}}"
+        data-key="elderName"
+        bindinput="onPrefInput"
+      />
+    </view>
+
+    <view class="field-item">
+      <text class="field-label">监护房间 / 区域</text>
+      <input
+        class="field-input"
+        placeholder="例如：客厅监护区 / 主卧"
+        maxlength="20"
+        value="{{prefs.roomLabel}}"
+        data-key="roomLabel"
+        bindinput="onPrefInput"
+      />
+    </view>
+
+    <view class="field-item">
+      <text class="field-label">紧急联系人</text>
+      <input
+        class="field-input"
+        placeholder="例如：子女 / 社区医生"
+        maxlength="16"
+        value="{{prefs.emergencyName}}"
+        data-key="emergencyName"
+        bindinput="onPrefInput"
+      />
+    </view>
+
+    <view class="field-item">
+      <text class="field-label">紧急联系电话</text>
+      <input
+        class="field-input"
+        type="number"
+        placeholder="输入手机号或座机号，首页可直接拨打"
+        maxlength="20"
+        value="{{prefs.emergencyPhone}}"
+        data-key="emergencyPhone"
+        bindinput="onPrefInput"
+      />
+    </view>
+
+    <button class="btn-reset primary-btn" hover-class="tap-hover" bindtap="onSavePrefsTap">
+      保存看护档案
+    </button>
+  </view>
+
+  <!-- 提醒方式与轮询偏好 -->
+  <view class="card">
+    <view class="section-header">
+      <text class="section-title">告警提醒与演示模式</text>
+      <text class="section-sub">即时生效</text>
+    </view>
+
+    <view class="switch-row">
+      <view class="switch-text">
+        <text class="switch-title">本地模拟演练模式</text>
+        <text class="switch-desc">无需连接真实硬件或配置 IAM 即可体验跌倒告警</text>
+      </view>
+      <switch
+        checked="{{prefs.demoMode}}"
+        color="#0d9488"
+        data-key="demoMode"
+        bindchange="onPrefSwitch"
+      />
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="switch-row">
+      <view class="switch-text">
+        <text class="switch-title">首页自动轮询云端</text>
+        <text class="switch-desc">定时拉取设备影子并比对状态变化</text>
+      </view>
+      <switch
+        checked="{{prefs.autoRefresh}}"
+        color="#0d9488"
+        data-key="autoRefresh"
+        bindchange="onPrefSwitch"
+      />
+    </view>
+
+    <view class="chip-row" wx:if="{{prefs.autoRefresh}}">
+      <text class="chip-label">刷新频率</text>
+      <view class="chip-group">
+        <view
+          wx:for="{{refreshOptions}}"
+          wx:key="ms"
+          class="freq-chip {{prefs.refreshMs === item.ms ? 'active' : ''}}"
+          data-ms="{{item.ms}}"
+          bindtap="onRefreshFreqTap"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="switch-row">
+      <view class="switch-text">
+        <text class="switch-title">手机端跌倒响铃提示</text>
+        <text class="switch-desc">检测到跌倒时播放本地告警提示音</text>
+      </view>
+      <switch
+        checked="{{prefs.soundAlert}}"
+        color="#0d9488"
+        data-key="soundAlert"
+        bindchange="onPrefSwitch"
+      />
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="switch-row">
+      <view class="switch-text">
+        <text class="switch-title">手机端长震动提醒</text>
+        <text class="switch-desc">同步触发震动以引起家人注意</text>
+      </view>
+      <switch
+        checked="{{prefs.vibrateAlert}}"
+        color="#0d9488"
+        data-key="vibrateAlert"
+        bindchange="onPrefSwitch"
+      />
+    </view>
+
+    <view class="test-cue-row">
+      <button class="btn-reset secondary-btn" hover-class="tap-hover" bindtap="onTestCueTap">
+        试听告警提示音与震动
+      </button>
+    </view>
+  </view>
+
+  <!-- 华为云 IoTDA 接入配置 -->
+  <view class="card">
+    <view class="section-header">
+      <text class="section-title">华为云 IoTDA 接入凭证</text>
+      <text class="pill {{cloudConfigured ? 'pill-safe' : 'pill-warn'}}">
+        {{cloudConfigured ? 'IAM 已填' : '待填写子账号'}}
+      </text>
+    </view>
+
+    <view class="field-item">
+      <text class="field-label">租户账号名 (iamDomain)</text>
+      <input
+        class="field-input"
+        placeholder="例如：hid_4cmd1am6hdsyxmj"
+        value="{{cloud.iamDomain}}"
+        data-key="iamDomain"
+        bindinput="onCloudInput"
+      />
+    </view>
+
+    <view class="field-item">
+      <text class="field-label">IAM 子用户名 (iamUser)</text>
+      <input
+        class="field-input"
+        placeholder="填写在华为云 IAM 创建的子用户名"
+        value="{{cloud.iamUser}}"
+        data-key="iamUser"
+        bindinput="onCloudInput"
+      />
+    </view>
+
+    <view class="field-item">
+      <view class="label-with-action">
+        <text class="field-label">IAM 子用户密码 (iamPassword)</text>
+        <text class="inline-link" bindtap="onTogglePasswordTap">
+          {{showPassword ? '隐藏密码' : '显示密码'}}
+        </text>
+      </view>
+      <input
+        class="field-input"
+        password="{{!showPassword}}"
+        placeholder="填写对应的 IAM 子用户密码"
+        value="{{cloud.iamPassword}}"
+        data-key="iamPassword"
+        bindinput="onCloudInput"
+      />
+    </view>
+
+    <view class="advanced-toggle" bindtap="onToggleAdvancedTap">
+      <text>{{showAdvanced ? '收起设备与实例参数' : '展开设备与实例参数（已预填当前设备）'}}</text>
+      <text class="toggle-arrow">{{showAdvanced ? '▲' : '▼'}}</text>
+    </view>
+
+    <view wx:if="{{showAdvanced}}" class="advanced-box">
+      <view class="field-item">
+        <text class="field-label">区域 (region)</text>
+        <input
+          class="field-input"
+          value="{{cloud.region}}"
+          data-key="region"
+          bindinput="onCloudInput"
+        />
+      </view>
+      <view class="field-item">
+        <text class="field-label">项目 ID (projectId)</text>
+        <input
+          class="field-input"
+          value="{{cloud.projectId}}"
+          data-key="projectId"
+          bindinput="onCloudInput"
+        />
+      </view>
+      <view class="field-item">
+        <text class="field-label">实例 ID (instanceId)</text>
+        <input
+          class="field-input"
+          value="{{cloud.instanceId}}"
+          data-key="instanceId"
+          bindinput="onCloudInput"
+        />
+      </view>
+      <view class="field-item">
+        <text class="field-label">IoTDA 应用端地址 (endpoint)</text>
+        <input
+          class="field-input"
+          value="{{cloud.endpoint}}"
+          data-key="endpoint"
+          bindinput="onCloudInput"
+        />
+      </view>
+      <view class="field-item">
+        <text class="field-label">设备 ID (deviceId)</text>
+        <input
+          class="field-input"
+          value="{{cloud.deviceId}}"
+          data-key="deviceId"
+          bindinput="onCloudInput"
+        />
+      </view>
+      <view class="field-item">
+        <text class="field-label">物模型服务 ID (serviceId)</text>
+        <input
+          class="field-input"
+          value="{{cloud.serviceId}}"
+          data-key="serviceId"
+          bindinput="onCloudInput"
+        />
+      </view>
+    </view>
+
+    <!-- 测试结果反馈框 -->
+    <view wx:if="{{testStatus !== 'idle'}}" class="test-result status-{{testStatus}}">
+      <view class="test-result-title">{{testTitle}}</view>
+      <view class="test-result-detail">{{testDetail}}</view>
+    </view>
+
+    <view class="btn-row">
+      <button
+        class="btn-reset outline-btn flex-1"
+        disabled="{{testing}}"
+        hover-class="tap-hover"
+        bindtap="onTestCloudTap"
+      >
+        {{testing ? '正在连接...' : '测试华为云连接'}}
+      </button>
+      <button
+        class="btn-reset primary-btn flex-1"
+        hover-class="tap-hover"
+        bindtap="onSaveCloudTap"
+      >
+        保存云端配置
+      </button>
+    </view>
+
+    <view class="utility-links">
+      <text class="utility-link" bindtap="onClearTokenTap">清除 Token 缓存</text>
+      <text class="utility-sep">·</text>
+      <text class="utility-link danger-link" bindtap="onResetCloudTap">恢复默认设备参数</text>
+    </view>
+  </view>
+
+  <!-- 接线与使用指引 -->
+  <view class="card guide-card">
+    <view class="section-header">
+      <text class="section-title">使用指引</text>
+    </view>
+    <view class="guide-item">1. 本程序已预填华为云华北-北京四实例（{{cloud.deviceId}}）及物模型服务 {{cloud.serviceId}}。</view>
+    <view class="guide-item">2. 请在华为云「统一身份认证 IAM」中创建子用户并赋予 IoTDA 权限，仅需填入子用户名与密码即可接入真实硬件。</view>
+    <view class="guide-item">3. 开发阶段请在微信开发者工具「详情 -> 本地设置」中勾选“不校验合法域名”；正式发布需在微信公众平台配置 request 合法域名：</view>
+    <view class="guide-code">https://iam.{{cloud.region}}.myhuaweicloud.com</view>
+    <view class="guide-code">{{cloud.endpoint}}</view>
+  </view>
+</view>

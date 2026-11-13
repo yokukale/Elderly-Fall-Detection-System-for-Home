@@ -1,0 +1,44 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/history/history",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "backgroundColor": "#F4F6F9",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "居家防跌倒守护",
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "default"
+  },
+  "tabBar": {
+    "color": "#8C97A8",
+    "selectedColor": "#0D9488",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "居家守护",
+        "iconPath": "assets/icons/guard.png",
+        "selectedIconPath": "assets/icons/guard-active.png"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "告警记录",
+        "iconPath": "assets/icons/history.png",
+        "selectedIconPath": "assets/icons/history-active.png"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "守护设置",
+        "iconPath": "assets/icons/settings.png",
+        "selectedIconPath": "assets/icons/settings-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

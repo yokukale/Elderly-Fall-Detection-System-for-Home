@@ -1,0 +1,1843 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>falling</class>
+ <widget class="QMainWindow" name="falling">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1260</width>
+    <height>820</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1020</width>
+    <height>680</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>老人跌倒检测 Windows 监控终端 · K230 + STM32 + 华为云 IoTDA</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow, QWidget#centralwidget {
+    background-color: #0F172A;
+    color: #E2E8F0;
+    font-family: &quot;Microsoft YaHei UI&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 9.5pt;
+}
+QFrame#frameHeader {
+    background-color: #1E293B;
+    border: 1px solid #334155;
+    border-radius: 8px;
+}
+QGroupBox {
+    background-color: #1E293B;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    margin-top: 14px;
+    padding: 10px 10px 10px 10px;
+    font-weight: bold;
+    color: #93C5FD;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 12px;
+    padding: 0 6px;
+}
+QTabWidget::pane {
+    border: 1px solid #334155;
+    border-radius: 6px;
+    background-color: #0F172A;
+}
+QTabBar::tab {
+    background-color: #1E293B;
+    color: #94A3B8;
+    border: 1px solid #334155;
+    border-bottom: none;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 8px 18px;
+    margin-right: 4px;
+    font-weight: bold;
+}
+QTabBar::tab:selected {
+    background-color: #2563EB;
+    color: #FFFFFF;
+    border-color: #3B82F6;
+}
+QTabBar::tab:hover:!selected {
+    background-color: #334155;
+    color: #F8FAFC;
+}
+QPushButton {
+    background-color: #334155;
+    color: #F8FAFC;
+    border: 1px solid #475569;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #475569;
+}
+QPushButton:pressed {
+    background-color: #1E293B;
+}
+QPushButton:disabled {
+    background-color: #1E293B;
+    color: #64748B;
+}
+QPushButton#btnQuickMute, QPushButton#btnTxMute, QPushButton#btnNbMute {
+    background-color: #D97706;
+    border-color: #F59E0B;
+    color: #FFFFFF;
+}
+QPushButton#btnQuickMute:hover, QPushButton#btnTxMute:hover, QPushButton#btnNbMute:hover {
+    background-color: #B45309;
+}
+QPushButton#btnQuickReset, QPushButton#btnTxReset, QPushButton#btnNbReset, QPushButton#btnConnectSerial, QPushButton#btnConnectMqtt, QPushButton#btnApplyParams {
+    background-color: #2563EB;
+    border-color: #3B82F6;
+    color: #FFFFFF;
+}
+QPushButton#btnQuickReset:hover, QPushButton#btnTxReset:hover, QPushButton#btnNbReset:hover, QPushButton#btnConnectSerial:hover, QPushButton#btnConnectMqtt:hover, QPushButton#btnApplyParams:hover {
+    background-color: #1D4ED8;
+}
+QPushButton#btnSimT3 {
+    background-color: #DC2626;
+    border-color: #EF4444;
+    color: #FFFFFF;
+}
+QPushButton#btnSimT3:hover {
+    background-color: #B91C1C;
+}
+QPushButton#btnSimT1 {
+    background-color: #059669;
+    border-color: #10B981;
+    color: #FFFFFF;
+}
+QLineEdit, QComboBox, QSpinBox, QDoubleSpinBox, QPlainTextEdit, QTableWidget {
+    background-color: #0B1220;
+    color: #E2E8F0;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 4px 6px;
+    selection-background-color: #2563EB;
+}
+QPlainTextEdit#txtSerialMonitor, QPlainTextEdit#txtCloudPayload, QPlainTextEdit#txtSystemLog {
+    font-family: &quot;Consolas&quot;, &quot;Cascadia Mono&quot;, monospace;
+    font-size: 9pt;
+}
+QHeaderView::section {
+    background-color: #1E293B;
+    color: #93C5FD;
+    padding: 5px;
+    border: none;
+    border-right: 1px solid #334155;
+    border-bottom: 1px solid #334155;
+    font-weight: bold;
+}
+QProgressBar {
+    background-color: #0B1220;
+    border: 1px solid #334155;
+    border-radius: 5px;
+    text-align: center;
+    color: #FFFFFF;
+    font-weight: bold;
+    min-height: 20px;
+}
+QProgressBar::chunk {
+    background-color: #38BDF8;
+    border-radius: 4px;
+}
+QMenuBar {
+    background-color: #1E293B;
+    color: #E2E8F0;
+    border-bottom: 1px solid #334155;
+}
+QMenuBar::item:selected {
+    background-color: #2563EB;
+}
+QMenu {
+    background-color: #1E293B;
+    color: #E2E8F0;
+    border: 1px solid #334155;
+}
+QMenu::item:selected {
+    background-color: #2563EB;
+}
+QStatusBar {
+    background-color: #1E293B;
+    color: #94A3B8;
+    border-top: 1px solid #334155;
+}
+QLabel#lblSerialPill, QLabel#lblVisionPill, QLabel#lblMqttPill, QLabel#lblBeepPill {
+    background-color: #0B1220;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 4px 10px;
+    color: #CBD5E1;
+}
+QLabel#lblSysBadge {
+    background-color: #065F46;
+    border: 1px solid #10B981;
+    border-radius: 14px;
+    padding: 5px 14px;
+    color: #ECFDF5;
+    font-weight: bold;
+    font-size: 10.5pt;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="rootLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frameHeader">
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <layout class="QHBoxLayout" name="headerLayout">
+       <property name="spacing">
+        <number>8</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>8</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="lblSysBadge">
+         <property name="text">
+          <string>● 正常监测中 (IDLE)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblSerialPill">
+         <property name="text">
+          <string>串口: 未连接</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblVisionPill">
+         <property name="text">
+          <string>K230 视觉: 等待帧</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblMqttPill">
+         <property name="text">
+          <string>华为云 MQTT: 未连接</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblBeepPill">
+         <property name="text">
+          <string>蜂鸣器: 静音</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="headerSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="chkSoundAlert">
+         <property name="text">
+          <string>PC 告警音</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnQuickMute">
+         <property name="text">
+          <string>消音 ($MUTE#)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnQuickReset">
+         <property name="text">
+          <string>复位 ($RESET#)</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="tabMain">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabMonitor">
+       <attribute name="title">
+        <string>实时监控大屏</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="tabMonitorLayout">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QSplitter" name="splitterMonitor">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <widget class="QGroupBox" name="groupVision">
+           <property name="title">
+            <string>K230 视觉检测框与轨迹 (640×480)</string>
+           </property>
+           <layout class="QVBoxLayout" name="visionLayout">
+            <item>
+             <widget class="qtfall::VisionCanvasWidget" name="canvasVision" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>440</width>
+                <height>330</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="visionMetaLayout">
+              <item>
+               <widget class="QLabel" name="lblBboxInfo">
+                <property name="text">
+                 <string>目标框: - | 协议: - | 速率: 0.0 fps</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="visionMetaSpacer">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblFrameStats">
+                <property name="text">
+                 <string>有效帧: 0 | 错帧: 0</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="widgetMonitorRight" native="true">
+           <layout class="QVBoxLayout" name="monitorRightLayout">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QGroupBox" name="groupKpi">
+              <property name="title">
+               <string>姿态识别与滑动窗口判决</string>
+              </property>
+              <layout class="QGridLayout" name="kpiGridLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblPoseTitle">
+                 <property name="text">
+                  <string>当前姿态:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lblPoseValue">
+                 <property name="font">
+                  <font>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>NoTarget (无目标)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QLabel" name="lblAlarmCountTitle">
+                 <property name="text">
+                  <string>累计报警:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="lblAlarmCountValue">
+                 <property name="font">
+                  <font>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>0 次</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblConfTitle">
+                 <property name="text">
+                  <string>置信度:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QProgressBar" name="progressConfidence">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                 <property name="format">
+                  <string>%p%</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLabel" name="lblHoldTitle">
+                 <property name="text">
+                  <string>状态倒计时:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLabel" name="lblHoldValue">
+                 <property name="text">
+                  <string>--</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="lblWindowTitle">
+                 <property name="text">
+                  <string>滑动窗口:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1" colspan="3">
+                <widget class="qtfall::WindowSlotsWidget" name="widgetWindowSlots" native="true"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupChart">
+              <property name="title">
+               <string>置信度实时曲线 (最近 60 帧)</string>
+              </property>
+              <layout class="QVBoxLayout" name="chartLayout">
+               <item>
+                <widget class="qtfall::ConfidenceChartWidget" name="chartConfidence" native="true">
+                 <property name="minimumSize">
+                  <size>
+                   <width>300</width>
+                   <height>145</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupQuickEvents">
+              <property name="title">
+               <string>实时告警事件流</string>
+              </property>
+              <layout class="QVBoxLayout" name="quickEventsLayout">
+               <item>
+                <widget class="QTableWidget" name="tableRecentEvents">
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+                 </property>
+                 <property name="columnCount">
+                  <number>5</number>
+                 </property>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>时间</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>来源</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>事件</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>置信度</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>详情</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabConnection">
+       <attribute name="title">
+        <string>串口与华为云 IoTDA</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="connMainLayout">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupSerial">
+          <property name="title">
+           <string>Windows 串口通信 (K230 / STM32 USB-TTL)</string>
+          </property>
+          <layout class="QVBoxLayout" name="serialLayout">
+           <item>
+            <layout class="QGridLayout" name="serialConfigGrid">
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblPort">
+               <property name="text">
+                <string>串口号:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboSerialPort"/>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="btnRefreshPorts">
+               <property name="text">
+                <string>刷新列表</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblBaud">
+               <property name="text">
+                <string>波特率:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="comboBaudRate">
+               <item>
+                <property name="text">
+                 <string>115200</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>9600</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>57600</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>230400</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>460800</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>921600</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QPushButton" name="btnConnectSerial">
+               <property name="text">
+                <string>打开串口</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="lblSerialRole">
+               <property name="text">
+                <string>接入模式:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="2">
+              <widget class="QComboBox" name="comboSerialRole">
+               <item>
+                <property name="text">
+                 <string>自动识别 (K230 视觉帧 + STM32 日志)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>K230 视觉直连模式 (本地执行滑窗判决)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>STM32 调试终端模式 (同步板端状态)</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="serialOptsLayout">
+             <item>
+              <widget class="QCheckBox" name="chkAutoBridgeToCloud">
+               <property name="text">
+                <string>串口状态变化自动代报华为云 MQTT</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="serialOptsSpacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblSerialStats">
+               <property name="text">
+                <string>RX: 0 B | TX: 0 B</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="serialMonCtrlLayout">
+             <item>
+              <widget class="QCheckBox" name="chkSerialPause">
+               <property name="text">
+                <string>暂停滚动</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="chkSerialHex">
+               <property name="text">
+                <string>HEX 显示</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="serialMonSpacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnClearSerialMonitor">
+               <property name="text">
+                <string>清空收发区</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPlainTextEdit" name="txtSerialMonitor">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>连接串口后，此处实时显示收发原始帧 ($x,y,w,h,State,score# / $F,...*XOR / STM32 [FALL]/[MQTT] 日志)...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="serialTxLayout">
+             <item>
+              <widget class="QLineEdit" name="editSerialTx">
+               <property name="placeholderText">
+                <string>输入要发送的串口指令，如 $MUTE# 或测试帧...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="chkTxAppendCrLf">
+               <property name="text">
+                <string>\r\n</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnSendSerialTx">
+               <property name="text">
+                <string>发送</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnTxMute">
+               <property name="text">
+                <string>$MUTE#</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnTxReset">
+               <property name="text">
+                <string>$RESET#</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupCloud">
+          <property name="title">
+           <string>华为云 IoTDA 接入与远程控制</string>
+          </property>
+          <layout class="QVBoxLayout" name="cloudLayout">
+           <item>
+            <widget class="QTabWidget" name="tabCloudMode">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="tabMqttBridge">
+              <attribute name="title">
+               <string>MQTT 3.1.1 设备通道</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="mqttLayout">
+               <item>
+                <layout class="QFormLayout" name="mqttForm">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lblMqttHost">
+                   <property name="text">
+                    <string>Broker 地址:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="editMqttHost">
+                   <property name="text">
+                    <string>f37725de82.st1.iotda-device.cn-north-4.myhuaweicloud.com</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="lblMqttPort">
+                   <property name="text">
+                    <string>端口 (1883):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSpinBox" name="spinMqttPort">
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>65535</number>
+                   </property>
+                   <property name="value">
+                    <number>1883</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="lblMqttDeviceId">
+                   <property name="text">
+                    <string>Device ID:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="editMqttDeviceId">
+                   <property name="text">
+                    <string>6af6a443cbb0cf6bb9970fe2_fall_stm32_dev01</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="lblMqttServiceId">
+                   <property name="text">
+                    <string>Service ID:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLineEdit" name="editMqttServiceId">
+                   <property name="text">
+                    <string>FallDetect</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="lblMqttClientId">
+                   <property name="text">
+                    <string>Client ID:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="editMqttClientId">
+                   <property name="placeholderText">
+                    <string>可点击下方“从 app_mqtt.h 导入”自动填充</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="lblMqttUser">
+                   <property name="text">
+                    <string>Username:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="editMqttUser"/>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="lblMqttPass">
+                   <property name="text">
+                    <string>Password:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QLineEdit" name="editMqttPass">
+                   <property name="echoMode">
+                    <enum>QLineEdit::EchoMode::Password</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblMqttWarn">
+                 <property name="styleSheet">
+                  <string notr="true">color: #FBBF24;</string>
+                 </property>
+                 <property name="text">
+                  <string>提示：同 ClientID 同时在线会与 STM32 互踢；无硬件时可作为 PC 代报终端测试云端指令下发。</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="mqttBtnLayout">
+                 <item>
+                  <widget class="QPushButton" name="btnImportAppMqtt">
+                   <property name="text">
+                    <string>导入 app_mqtt.h</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnConnectMqtt">
+                   <property name="text">
+                    <string>连接 MQTT</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnPublishNow">
+                   <property name="text">
+                    <string>立即上报 OneJSON</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QPlainTextEdit" name="txtCloudPayload">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="placeholderText">
+                  <string>此处显示 OneJSON 属性上报报文与收到的云端 MUTE / RESET 命令...</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tabNorthbound">
+              <attribute name="title">
+               <string>北向 HTTPS API (不踢板卡)</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="nbLayout">
+               <item>
+                <layout class="QFormLayout" name="nbForm">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lblIamEp">
+                   <property name="text">
+                    <string>IAM Endpoint:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="editIamEndpoint">
+                   <property name="text">
+                    <string>https://iam.cn-north-4.myhuaweicloud.com</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="lblAppEp">
+                   <property name="text">
+                    <string>IoTDA 应用接入:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="editAppEndpoint">
+                   <property name="placeholderText">
+                    <string>https://&lt;instance&gt;.st1.iotda-app.cn-north-4.myhuaweicloud.com</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="lblProjectId">
+                   <property name="text">
+                    <string>Project ID:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="editProjectId"/>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="lblIamDomain">
+                   <property name="text">
+                    <string>账号名 (Domain):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLineEdit" name="editIamDomain"/>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="lblIamUser">
+                   <property name="text">
+                    <string>IAM 用户名:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="editIamUser"/>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="lblIamPass">
+                   <property name="text">
+                    <string>IAM 密码:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="editIamPass">
+                   <property name="echoMode">
+                    <enum>QLineEdit::EchoMode::Password</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="lblIamToken">
+                   <property name="text">
+                    <string>X-Auth-Token:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QLineEdit" name="editIamToken">
+                   <property name="placeholderText">
+                    <string>点击“获取 Token”自动填充，或直接粘贴 Token</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="nbBtnLayout">
+                 <item>
+                  <widget class="QPushButton" name="btnFetchToken">
+                   <property name="text">
+                    <string>获取 Token</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnQueryShadow">
+                   <property name="text">
+                    <string>查询设备影子</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnNbMute">
+                   <property name="text">
+                    <string>云端下发 MUTE</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btnNbReset">
+                   <property name="text">
+                    <string>云端下发 RESET</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="nbPollLayout">
+                 <item>
+                  <widget class="QCheckBox" name="chkAutoPollShadow">
+                   <property name="text">
+                    <string>每 5 秒自动轮询设备影子</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblShadowStatus">
+                   <property name="text">
+                    <string>状态: 未同步</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <spacer name="nbSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabSimulator">
+       <attribute name="title">
+        <string>仿真测试与判决参数</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="simMainLayout">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupSimScenarios">
+          <property name="title">
+           <string>K230 场景仿真器 (对应开发文档 §9 测试用例)</string>
+          </property>
+          <layout class="QVBoxLayout" name="simScenLayout">
+           <item>
+            <layout class="QFormLayout" name="simConfigForm">
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblSimProto">
+               <property name="text">
+                <string>仿真帧格式:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboSimProtocol">
+               <item>
+                <property name="text">
+                 <string>Legacy 标准帧 ($x,y,w,h,State,score#)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Robust 校验帧 ($F,evt,state,cls,score,cx,cy,seq*XOR)</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblSimFps">
+               <property name="text">
+                <string>发送帧率 (FPS):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSpinBox" name="spinSimFps">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>30</number>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chkSimSendSerial">
+             <property name="text">
+              <string>同时将仿真帧从已打开串口发出（PC 作为虚拟 K230 测试 STM32 板卡）</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="simBtnGrid">
+             <item row="0" column="0">
+              <widget class="QPushButton" name="btnSimT1">
+               <property name="text">
+                <string>▶ T1 正常行走 (NoFall)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="btnSimT2">
+               <property name="text">
+                <string>▶ T2 缓慢蹲下 (防抖过滤)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="btnSimT3">
+               <property name="text">
+                <string>▶ T3 快速跌倒 (触发报警)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="btnSimT4">
+               <property name="text">
+                <string>▶ T4 跌倒后爬起 (保持+冷却)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="btnSimT8">
+               <property name="text">
+                <string>▶ T8 K230 断电掉线 (5s 超时)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="btnSimStop">
+               <property name="text">
+                <string>■ 停止仿真</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupManualFrame">
+             <property name="title">
+              <string>单帧自定义注入</string>
+             </property>
+             <layout class="QGridLayout" name="manualGrid">
+              <item row="0" column="0">
+               <widget class="QLabel" name="lblManX">
+                <property name="text">
+                 <string>X:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinManX">
+                <property name="maximum">
+                 <number>640</number>
+                </property>
+                <property name="value">
+                 <number>190</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="lblManY">
+                <property name="text">
+                 <string>Y:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QSpinBox" name="spinManY">
+                <property name="maximum">
+                 <number>480</number>
+                </property>
+                <property name="value">
+                 <number>300</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lblManW">
+                <property name="text">
+                 <string>W:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="spinManW">
+                <property name="maximum">
+                 <number>640</number>
+                </property>
+                <property name="value">
+                 <number>250</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="lblManH">
+                <property name="text">
+                 <string>H:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QSpinBox" name="spinManH">
+                <property name="maximum">
+                 <number>480</number>
+                </property>
+                <property name="value">
+                 <number>115</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lblManState">
+                <property name="text">
+                 <string>姿态:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="comboManState">
+                <item>
+                 <property name="text">
+                  <string>Fall</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>NoFall</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>SideLying (仅Robust)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Sitting (仅Robust)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Standing (仅Robust)</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="lblManScore">
+                <property name="text">
+                 <string>Score:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QDoubleSpinBox" name="dspinManScore">
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.050000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.880000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0" colspan="4">
+               <widget class="QPushButton" name="btnInjectFrame">
+                <property name="text">
+                 <string>单次注入一帧 (同步触发本地与可选串口发送)</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="simSpacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupJudgeParams">
+          <property name="title">
+           <string>滑动窗口判决参数 (对应 STM32 app_fall.h)</string>
+          </property>
+          <layout class="QVBoxLayout" name="paramsLayout">
+           <item>
+            <layout class="QFormLayout" name="paramsForm">
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblScoreTh">
+               <property name="text">
+                <string>置信度阈值 (FALL_SCORE_TH):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QDoubleSpinBox" name="dspinScoreTh">
+               <property name="minimum">
+                <double>0.100000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>0.990000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.050000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.500000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblWinLen">
+               <property name="text">
+                <string>滑动窗口长度 (FALL_WIN_LEN):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSpinBox" name="spinWinLen">
+               <property name="minimum">
+                <number>3</number>
+               </property>
+               <property name="maximum">
+                <number>30</number>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="lblHitTh">
+               <property name="text">
+                <string>命中触发帧数 (FALL_HIT_TH):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="spinHitTh">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>30</number>
+               </property>
+               <property name="value">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="lblHoldSec">
+               <property name="text">
+                <string>报警保持时长 (秒):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QSpinBox" name="spinHoldSec">
+               <property name="minimum">
+                <number>3</number>
+               </property>
+               <property name="maximum">
+                <number>180</number>
+               </property>
+               <property name="value">
+                <number>30</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="lblCooldownSec">
+               <property name="text">
+                <string>报警冷却期 (秒):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QSpinBox" name="spinCooldownSec">
+               <property name="minimum">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <number>120</number>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="lblOfflineSec">
+               <property name="text">
+                <string>K230 离线超时 (秒):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QSpinBox" name="spinOfflineSec">
+               <property name="minimum">
+                <number>2</number>
+               </property>
+               <property name="maximum">
+                <number>60</number>
+               </property>
+               <property name="value">
+                <number>5</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chkGeomCheck">
+             <property name="text">
+              <string>启用几何合理性判据 (仅 w &gt; h 横躺框计入有效跌倒)</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chkSideLyingAsFall">
+             <property name="text">
+              <string>将 Robust 模型 side-lying (侧卧) 计入跌倒 (卧室场景建议关闭)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="paramBtnLayout">
+             <item>
+              <widget class="QPushButton" name="btnApplyParams">
+               <property name="text">
+                <string>应用参数</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnDefaultParams">
+               <property name="text">
+                <string>恢复默认值</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="paramsSpacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabHistory">
+       <attribute name="title">
+        <string>报警历史与运行日志</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="historyMainLayout">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>8</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="historyFilterLayout">
+          <item>
+           <widget class="QLineEdit" name="editHistorySearch">
+            <property name="placeholderText">
+             <string>按关键字检索来源、事件或备注...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboHistoryFilter">
+            <item>
+             <property name="text">
+              <string>全部记录</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>跌倒报警</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>消音与复位</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>视觉掉线</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnExportCsv">
+            <property name="text">
+             <string>导出 CSV (Excel)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSaveJson">
+            <property name="text">
+             <string>保存 JSON</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnClearHistory">
+            <property name="text">
+             <string>清空记录</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableHistory">
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+          </property>
+          <property name="columnCount">
+           <number>7</number>
+          </property>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>时间</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>来源</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>事件类型</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>置信度</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>检测框</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>备注</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupSystemLog">
+          <property name="title">
+           <string>终端系统运行日志</string>
+          </property>
+          <layout class="QVBoxLayout" name="sysLogLayout">
+           <item>
+            <widget class="QPlainTextEdit" name="txtSystemLog">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1260</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <addaction name="actionImportAppMqtt"/>
+    <addaction name="actionExportCsv"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuControl">
+    <property name="title">
+     <string>控制(&amp;C)</string>
+    </property>
+    <addaction name="actionMute"/>
+    <addaction name="actionReset"/>
+    <addaction name="actionTestSound"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>帮助(&amp;H)</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuControl"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionImportAppMqtt">
+   <property name="text">
+    <string>导入 STM32 app_mqtt.h 云端配置</string>
+   </property>
+  </action>
+  <action name="actionExportCsv">
+   <property name="text">
+    <string>导出报警记录 CSV...</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="actionMute">
+   <property name="text">
+    <string>立即消音 (MUTE)</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="text">
+    <string>状态复位 (RESET)</string>
+   </property>
+  </action>
+  <action name="actionTestSound">
+   <property name="text">
+    <string>试听 PC 告警提示音</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>关于 Qtfall 监控终端</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qtfall::VisionCanvasWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/vision_canvas_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>qtfall::ConfidenceChartWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/confidence_chart_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>qtfall::WindowSlotsWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/window_slots_widget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

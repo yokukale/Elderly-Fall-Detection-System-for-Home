@@ -1,0 +1,238 @@
+<!-- pages/index/index.wxml -->
+<view class="page-wrap">
+  <!-- 顶部守护对象与来源标识 -->
+  <view class="top-meta">
+    <view class="top-target">
+      <text class="target-name">{{elderName}}</text>
+      <text class="target-dot">·</text>
+      <text class="target-room">{{roomLabel}}</text>
+    </view>
+    <view class="pill {{demoMode ? 'pill-info' : (snapshot.online ? 'pill-safe' : 'pill-muted')}}">
+      <text>{{demoMode ? '模拟演练中' : (snapshot.online ? '华为云实时' : '待机/离线')}}</text>
+    </view>
+  </view>
+
+  <!-- 尚未配置 IAM 子账号提示卡 -->
+  <view wx:if="{{needConfig && !demoMode}}" class="card setup-card">
+    <view class="setup-title">尚未配置华为云 IAM 子账号</view>
+    <view class="setup-desc">
+      已预填当前实例（f37725de82 / FallDetector）参数，但还缺少 IAM 子用户名与密码。可先开启模拟演练体验全部界面与告警，或前往设置页填入子账号连接真机。
+    </view>
+    <view class="setup-actions">
+      <button class="btn-reset action-pill primary" bindtap="onEnableDemo">开启模拟演练</button>
+      <button class="btn-reset action-pill outline" bindtap="onGoSettings">前往设置填写</button>
+    </view>
+  </view>
+
+  <!-- 云端报错提示卡 -->
+  <view wx:if="{{errorMsg && !needConfig && !demoMode}}" class="card error-card">
+    <view class="error-row">
+      <view class="error-text-wrap">
+        <view class="error-title">云端同步受阻</view>
+        <view class="error-desc">{{errorMsg}}</view>
+      </view>
+      <button class="btn-reset retry-btn" bindtap="onManualRefresh">重试</button>
+    </view>
+  </view>
+
+  <!-- 核心守护状态卡（安全 / 注意 / 跌倒紧急告警） -->
+  <view class="card hero-card hero-{{snapshot.severity}}">
+    <view class="hero-top">
+      <view class="hero-badge hero-badge-{{snapshot.severity}}">
+        <text wx:if="{{snapshot.severity === 'danger'}}">紧急跌倒告警</text>
+        <text wx:elif="{{snapshot.severity === 'warn'}}">设备注意</text>
+        <text wx:else>实时守护中</text>
+      </view>
+      <text class="hero-sync">{{snapshot.relativeTimeText}}</text>
+    </view>
+
+    <view class="hero-main-title">{{snapshot.heroTitle}}</view>
+    <view class="hero-subtitle">{{snapshot.heroSubtitle}}</view>
+
+    <view class="hero-footer">
+      <text class="hero-time">最近上报：{{snapshot.eventTimeText}}</text>
+      <text wx:if="{{snapshot.fallState === 1}}" class="hero-conf">置信度 {{snapshot.confidencePct}}%</text>
+    </view>
+
+    <!-- 跌倒状态下的快速响应区（紧急联系 + 停止本机铃声） -->
+    <view wx:if="{{snapshot.fallState === 1}}" class="hero-emergency-bar">
+      <button class="btn-reset emergency-call-btn" bindtap="onCallEmergency">
+        <text>一键拨打 {{emergencyName}}</text>
+        <text wx:if="{{emergencyPhone}}" class="call-sub">（{{emergencyPhone}}）</text>
+      </button>
+      <button
+        wx:if="{{!localSilenced}}"
+        class="btn-reset silence-local-btn"
+        bindtap="onSilenceLocal"
+      >
+        先停本机提示音
+      </button>
+    </view>
+  </view>
+
+  <!-- 2x2 设备与传感器核心指标 -->
+  <view class="metric-grid">
+    <view class="card metric-item">
+      <view class="metric-label">主控网络</view>
+      <view class="metric-value-row">
+        <view class="dot {{snapshot.online ? 'dot-safe' : 'dot-warn'}}"></view>
+        <text class="metric-value">{{snapshot.deviceStatusText}}</text>
+      </view>
+      <view class="metric-sub">STM32 + ESP-01S</view>
+    </view>
+
+    <view class="card metric-item">
+      <view class="metric-label">K230 视觉</view>
+      <view class="metric-value-row">
+        <view class="dot {{snapshot.visionOffline ? 'dot-warn' : (snapshot.online ? 'dot-safe' : 'dot-muted')}}"></view>
+        <text class="metric-value">{{snapshot.visionOffline ? '通信超时' : (snapshot.online ? '识别正常' : '随主机离线')}}</text>
+      </view>
+      <view class="metric-sub">USART2 · 640×480</view>
+    </view>
+
+    <view class="card metric-item">
+      <view class="metric-label">现场蜂鸣器</view>
+      <view class="metric-value-row">
+        <view class="dot {{snapshot.beepOn ? 'dot-danger' : 'dot-muted'}}"></view>
+        <text class="metric-value {{snapshot.beepOn ? 'text-danger' : ''}}">
+          {{snapshot.beepOn ? '报警响铃中' : '静音待机'}}
+        </text>
+      </view>
+      <view class="metric-sub">PA5 音乐报警</view>
+    </view>
+
+    <view class="card metric-item">
+      <view class="metric-label">模型置信度</view>
+      <view class="metric-value-row">
+        <text class="metric-value">{{snapshot.confidencePct}}%</text>
+      </view>
+      <view class="conf-bar-bg">
+        <view
+          class="conf-bar-fill {{snapshot.fallState === 1 ? 'fill-danger' : 'fill-safe'}}"
+          style="width: {{snapshot.confidencePct}}%;"
+        ></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 远程处置操作卡（消音 / 复位 / 随时拨号） -->
+  <view class="card">
+    <view class="section-header">
+      <text class="section-title">远程处置与联系</text>
+      <text class="section-sub">{{snapshot.online ? '指令可实时下发至设备' : '设备离线时不可下发'}}</text>
+    </view>
+
+    <view class="cmd-row">
+      <button
+        class="btn-reset cmd-btn cmd-mute {{(!snapshot.online || sending) ? 'is-disabled' : ''}}"
+        disabled="{{!snapshot.online || sending}}"
+        bindtap="onMuteDevice"
+      >
+        <view class="cmd-btn-title">远程消音</view>
+        <view class="cmd-btn-sub">停响家中蜂鸣器 (MUTE)</view>
+      </button>
+
+      <button
+        class="btn-reset cmd-btn cmd-reset {{(!snapshot.online || sending) ? 'is-disabled' : ''}}"
+        disabled="{{!snapshot.online || sending}}"
+        bindtap="onResetDevice"
+      >
+        <view class="cmd-btn-title">确认复位</view>
+        <view class="cmd-btn-sub">恢复正常监测 (RESET)</view>
+      </button>
+    </view>
+
+    <button class="btn-reset contact-strip" bindtap="onCallEmergency">
+      <text class="contact-label">紧急联系电话（{{emergencyName}}）</text>
+      <text class="contact-value">{{emergencyPhone ? emergencyPhone + ' · 点击拨打' : '未设置 · 点击去填写'}}</text>
+    </button>
+  </view>
+
+  <!-- 640x480 K230 识别框位置示意图 -->
+  <view class="card">
+    <view class="section-header">
+      <text class="section-title">跌倒位置区域示意</text>
+      <text class="section-sub">{{snapshot.bbox.zoneLabel}}</text>
+    </view>
+
+    <view class="vision-stage">
+      <view class="vision-grid-h top-line"></view>
+      <view class="vision-grid-h bottom-line"></view>
+      <view class="vision-grid-v left-line"></view>
+      <view class="vision-grid-v right-line"></view>
+      <view class="vision-res-tag">K230 视角 640×480</view>
+
+      <view
+        wx:if="{{snapshot.bbox.hasBox}}"
+        class="bbox-rect {{snapshot.fallState === 1 ? 'bbox-danger' : 'bbox-watch'}}"
+        style="left: {{snapshot.bbox.leftPct}}%; top: {{snapshot.bbox.topPct}}%; width: {{snapshot.bbox.widthPct}}%; height: {{snapshot.bbox.heightPct}}%;"
+      >
+        <view class="bbox-label">
+          {{snapshot.fallState === 1 ? '疑似跌倒' : '目标框'}} {{snapshot.confidencePct}}%
+        </view>
+      </view>
+
+      <view wx:else class="vision-empty">
+        <text>{{snapshot.online ? '当前画面无跌倒目标框' : '等待设备上线获取画面坐标'}}</text>
+      </view>
+    </view>
+
+    <view class="bbox-meta">
+      <text class="bbox-coord">坐标框 bbox: {{snapshot.bbox.raw}}</text>
+      <text wx:if="{{snapshot.bbox.hasBox}}" class="pill {{snapshot.bbox.horizontalPose ? 'pill-danger' : 'pill-info'}}">
+        {{snapshot.bbox.horizontalPose ? '横向倒地特征 (w > h)' : '常规框比例'}}
+      </text>
+    </view>
+  </view>
+
+  <!-- 本地模拟演练控制台（仅 demoMode 开启时展示） -->
+  <view wx:if="{{demoMode}}" class="card demo-panel">
+    <view class="section-header">
+      <text class="section-title">模拟演练控制台</text>
+      <button class="btn-reset demo-exit-btn" bindtap="onExitDemo">退出模拟</button>
+    </view>
+    <view class="demo-tip">切换场景可立即体验首页告警、声震提醒、坐标框标注与时间线记录</view>
+    <view class="demo-btn-grid">
+      <button
+        class="btn-reset demo-chip {{demoScenario === 'normal' ? 'is-active' : ''}}"
+        data-scene="normal"
+        bindtap="onPickDemoScene"
+      >
+        正常姿态
+      </button>
+      <button
+        class="btn-reset demo-chip danger {{demoScenario === 'fall' ? 'is-active' : ''}}"
+        data-scene="fall"
+        bindtap="onPickDemoScene"
+      >
+        模拟跌倒
+      </button>
+      <button
+        class="btn-reset demo-chip warn {{demoScenario === 'vision_offline' ? 'is-active' : ''}}"
+        data-scene="vision_offline"
+        bindtap="onPickDemoScene"
+      >
+        K230 掉线
+      </button>
+      <button
+        class="btn-reset demo-chip muted {{demoScenario === 'device_offline' ? 'is-active' : ''}}"
+        data-scene="device_offline"
+        bindtap="onPickDemoScene"
+      >
+        主机离线
+      </button>
+    </view>
+  </view>
+
+  <!-- 自动轮询底栏 -->
+  <view class="card sync-bar">
+    <view class="sync-left">
+      <text class="sync-title">自动守护刷新（每 {{refreshSec}} 秒）</text>
+      <text class="sync-sub">下拉页面也可随时手动刷新</text>
+    </view>
+    <view class="sync-right">
+      <switch checked="{{autoRefresh}}" color="#0D9488" bindchange="onToggleAutoRefresh" />
+      <button class="btn-reset refresh-mini-btn" loading="{{loading}}" bindtap="onManualRefresh">刷新</button>
+    </view>
+  </view>
+</view>

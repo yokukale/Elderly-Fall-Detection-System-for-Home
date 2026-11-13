@@ -1,0 +1,102 @@
+<!-- pages/history/history.wxml -->
+<view class="page-wrap">
+  <!-- 顶部守护统计卡 -->
+  <view class="card summary-card">
+    <view class="summary-top">
+      <view>
+        <view class="summary-title">{{elderName}} · 守护时间轴</view>
+        <view class="summary-sub">{{roomLabel}} · 本地最多保留 100 条关键事件</view>
+      </view>
+      <view
+        wx:if="{{totalCount > 0}}"
+        class="clear-btn"
+        hover-class="tap-hover"
+        bindtap="onClearTap"
+      >
+        清空记录
+      </view>
+    </view>
+
+    <view class="summary-metrics">
+      <view class="metric-item {{activeFallCount > 0 ? 'metric-danger' : ''}}">
+        <text class="metric-value">{{activeFallCount}}</text>
+        <text class="metric-label">待处置跌倒</text>
+      </view>
+      <view class="metric-item">
+        <text class="metric-value">{{todayFallCount}}</text>
+        <text class="metric-label">今日跌倒次数</text>
+      </view>
+      <view class="metric-item">
+        <text class="metric-value">{{totalCount}}</text>
+        <text class="metric-label">累计守护事件</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类筛选栏 -->
+  <view class="filter-bar">
+    <view
+      wx:for="{{filterTabs}}"
+      wx:key="key"
+      class="filter-tab {{activeFilter === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onFilterTap"
+    >
+      <text>{{item.label}}</text>
+      <text class="filter-count" wx:if="{{item.count > 0}}">{{item.count}}</text>
+    </view>
+  </view>
+
+  <!-- 事件时间轴列表 -->
+  <view wx:if="{{visibleItems.length > 0}}" class="timeline-list">
+    <view
+      wx:for="{{visibleItems}}"
+      wx:key="id"
+      class="card event-card severity-{{item.severity}}"
+    >
+      <view class="event-accent"></view>
+      <view class="event-body">
+        <view class="event-head">
+          <view class="event-title-wrap">
+            <view class="event-dot dot-{{item.severity}}"></view>
+            <text class="event-title">{{item.title}}</text>
+          </view>
+          <text wx:if="{{item.episodeLabel}}" class="pill {{item.episodeClass}}">
+            {{item.episodeLabel}}
+          </text>
+        </view>
+
+        <view class="event-detail">{{item.detail}}</view>
+
+        <view class="event-tags" wx:if="{{item.confidencePct !== undefined || item.zoneLabel}}">
+          <text wx:if="{{item.confidencePct !== undefined}}" class="meta-chip">
+            置信度 {{item.confidencePct}}%
+          </text>
+          <text wx:if="{{item.zoneLabel}}" class="meta-chip">
+            区域：{{item.zoneLabel}}
+          </text>
+        </view>
+
+        <view class="event-foot">
+          <text class="event-time">{{item.timeText}} · {{item.relativeText}}</text>
+          <text class="pill {{item.sourceClass}}">{{item.sourceLabel}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:else class="card empty-card">
+    <view class="empty-icon">✓</view>
+    <view class="empty-title">{{emptyTitle}}</view>
+    <view class="empty-desc">{{emptyDesc}}</view>
+    <view
+      wx:if="{{activeFilter !== 'all' && totalCount > 0}}"
+      class="empty-btn"
+      hover-class="tap-hover"
+      bindtap="onResetFilterTap"
+    >
+      查看全部记录
+    </view>
+  </view>
+</view>
